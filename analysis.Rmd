@@ -1,0 +1,130 @@
+---
+title: "Coffee Store Chain Analysis"
+author: "Sasank Lakimsetti"
+output: flexdashboard::flex_dashboard
+date: "07 April, 2024"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, message = FALSE)
+pacman::p_load(tidyverse,
+               dplyr,
+               ggplot2,
+               reactable,
+               flexdashboard,
+               here)
+```
+
+# Datset
+
+```{r}
+data<-read.csv("C://lpu//4th sem//INT232 - R Programming//Project//Project testing//data//dataset.csv")
+reactable::reactable(data)
+```
+
+### The dataset has been retreived from [Kaggle](www.kaggle.com)
+### The data contains sales of six months of the year 2023
+
+# Store Location Analysis
+
+```{r}
+sub1 <- data %>%
+  group_by(store_location) %>%
+  summarise(transaction_qty = sum(transaction_qty))
+ggplot(data=sub1, mapping=aes(x=store_location, y=transaction_qty)) +
+  geom_col(fill="palevioletred") +
+  geom_text(aes(label=transaction_qty), vjust=-0.5, check_overlap=TRUE) +
+  scale_y_continuous(limits=c(0, 80000), breaks=seq(0, 80000, by=10000)) +
+  labs(title="Analysis based on store locations",
+       subtitle = "This analyzes sales performance across different stores based on their locations. By comparing sales figures, you can identify which stores are performing well and potentially uncover factors contributing to their success.",
+       x="Store Location", y="Total Transaction Quantity")
+```
+
+### Conclusion:
+
+-   From this analysis, we can say that all stores' sales are good where sales of store at Lower Manhattan is higher compared to other locations with 71742 sales
+
+# Product Category Analysis
+```{r fig.width=10, fig.height=6}
+sub2 <- data %>%
+  group_by(product_category) %>%
+  summarise(transaction_qty=sum(transaction_qty))
+ggplot(data=sub2,
+       mapping=aes(x=product_category,
+                   y=transaction_qty)) +
+  geom_col(fill="palevioletred") +
+  geom_text(aes(label=transaction_qty),vjust=-0.5, check_overlap = TRUE) +
+  labs(title = "Analysis based on Product Categories",
+       subtitle="This involves analyzing sales data based on product categories.",
+       x="Product Category",
+       y="Total Transaction quantity")
+```
+
+### Conclusion:
+-   There are highest sales for Coffee with total 89250 sales followed by Tea with 69737 sales
+
+# Product Type Analysis
+```{r fig.width=30, fig.height=12}
+sub3<- data %>%
+  group_by(product_type) %>%
+  summarize(transaction_qty=sum(transaction_qty))
+ggplot(sub3, 
+       mapping=aes(x=product_type,
+                   y=transaction_qty)) +
+  geom_col(fill="palevioletred") +
+  geom_text(aes(label=transaction_qty), vjust=-0.5, check_overlap = TRUE)+
+  labs(title = "Product Type Analysis",
+       subtitle = "This analyzes the sales data based on product types.",
+       x="Product Type",
+       y="Total Transaction Quantity")
+```
+
+### Conclusion:
+-   The highest selling product was Brewed Chai Tea with 26250 sales.
+-   The second highest selling product was Gourmet Brewed Coffee with 25973 sales.
+
+# Temporal Analysis - I
+```{r fig.width=14}
+# Define the correct order of the months
+month.order <- c("January", "February", "March", "April", "May", "June", 
+                 "July", "August", "September", "October", "November", "December")
+sub4<-data %>%
+  group_by(Month.Name) %>%
+  summarize(transaction_qty=sum(transaction_qty))
+
+# Convert Month.Name to a factor and specify the levels
+sub4$Month.Name <- factor(sub4$Month.Name, levels = month.order)
+
+# Create the plot
+ggplot(sub4, mapping = aes(x=Month.Name, y=transaction_qty)) +
+  geom_line(size=1, group=1, color="palevioletred") + 
+  geom_text(aes(label=transaction_qty), vjust=-0.5, check_overlap = TRUE) +
+  labs(title="Temporal Analysis - I", subtitle = "This analyzes the pattern of sales of products over the months",
+       x="Month", y="Total Transaction Quantity")
+
+```
+
+### Conclusion:
+-   The overall sales are higher in the month of June with 50942 sales followed by the month of May with 48233 sales
+-   The data contains sales of six months of the year 2023
+-   The least sales were happened in the month of February with 23556 sales followed by the month of January with 24870 sales
+
+# Temporal Analysis - II
+```{r}
+day.order<-c("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday")
+sub5<- data %>%
+  group_by(Day.Name) %>%
+  summarise(transaction_qty=sum(transaction_qty))
+sub5$Day.Name <- factor(sub5$Day.Name, levels=day.order)
+ggplot(sub5, mapping=aes(x=Day.Name,
+                         y=transaction_qty)) +
+  geom_line(size=1,group=1,color="palevioletred") +
+  geom_text(aes(label=transaction_qty), vjust=-0.5, check_overlap = TRUE) +
+  labs(title="Temporal Analysis - II", subtitle = "This analyzes the pattern of day wise sales of products",
+       x="Day", y="Total Transaction Quantity")
+  
+```
+## Conclusion:
+-   The sales on Monday and Friday are comparitively high with 31231 and 31207 sales respectively.
+-   There is huge dip in sales on Saturday from Friday with 29614 and the sales on Saturday were very less than all other days
+-   There are average sales on Tuesday and Wednesday with 30449 and 30625 sales respectively
