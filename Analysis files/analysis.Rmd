@@ -17,21 +17,25 @@ pacman::p_load(tidyverse,
 
 ```{=html}
 <script type="text/javascript">
-        window.onload = function() {
-            // For Full Screen Mode
-            var elem = document.documentElement;
-            if (elem.requestFullscreen) {
-                elem.requestFullscreen();
-            } else if (elem.webkitRequestFullscreen) { /* Safari */
-                elem.webkitRequestFullscreen();
-            } else if (elem.msRequestFullscreen) { /* IE11 */
-                elem.msRequestFullscreen();
-            }
-
-            // For 90% Zoom
-            document.body.style.zoom="90%";
+    window.onload = function() {
+        // For Full Screen Mode
+        var elem = document.documentElement;
+        if (elem.requestFullscreen) {
+            elem.requestFullscreen();
+        } else if (elem.webkitRequestFullscreen) { /* Safari */
+            elem.webkitRequestFullscreen();
+        } else if (elem.msRequestFullscreen) { /* IE11 */
+            elem.msRequestFullscreen();
         }
-    </script>
+
+        // For 90% Zoom
+        document.body.style.zoom="90%";
+
+        // For Vertical Scroll
+        document.body.style.overflowY = "auto";
+    }
+</script>
+
 ```
 # Datset
 
@@ -168,6 +172,7 @@ ggplot(sub9, mapping = aes(x=product_category,
 ```
 
 ### Conclusion
+
 -   The highest profit was earned on Coffee category of total sum 269952.45 .
 -   The second highest profit was earned on Tea category of total sum 196405.95 .
 -   The least profit was earned on Packaged Chocolate category of total sum 4407.64 .

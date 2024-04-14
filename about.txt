@@ -9,3 +9,4 @@ This analysis contains
 The Markdown file contains Rmd script along with R code chunks.
 
 There is an use of javascript in the Rmd script. It was used so that there will be no issue in the viewing of the html document in the browser.
+Once refresh the page or use full screen if any problem raises in view of dashboard. Full screen will be a better choice.
