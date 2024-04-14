@@ -1,0 +1,242 @@
+---
+title: "Coffee Store Chain Analysis"
+author: "Sasank Lakimsetti"
+output: flexdashboard::flex_dashboard
+date: "07 April, 2024"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, message = FALSE)
+pacman::p_load(tidyverse,
+               dplyr,
+               ggplot2,
+               reactable,
+               flexdashboard,
+               here)
+```
+
+```{=html}
+<script type="text/javascript">
+        window.onload = function() {
+            // For Full Screen Mode
+            var elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.webkitRequestFullscreen) { /* Safari */
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) { /* IE11 */
+                elem.msRequestFullscreen();
+            }
+
+            // For 90% Zoom
+            document.body.style.zoom="90%";
+        }
+    </script>
+```
+# Datset
+
+```{r}
+data<-read.csv("C://lpu//4th sem//INT232 - R Programming//Project//Project testing//dataset.csv")
+reactable::reactable(data)
+```
+
+### The dataset has been retreived from [Kaggle](https://www.kaggle.com/datasets)
+
+### The data contains sales of six months of the year 2023
+
+# Store Location Analysis
+
+```{r fig.align='center'}
+sub1 <- data %>%
+  group_by(store_location) %>%
+  summarise(transaction_qty = sum(transaction_qty))
+ggplot(data=sub1, mapping=aes(x=store_location, y=transaction_qty)) +
+  geom_col(fill="palevioletred") +
+  geom_text(aes(label=transaction_qty), vjust=-0.5, check_overlap=TRUE) +
+  scale_y_continuous(limits=c(0, 80000), breaks=seq(0, 80000, by=10000)) +
+  labs(title="Analysis based on store locations",
+       subtitle = "This analyzes sales performance across different stores based on their locations.",
+       x="Store Location", y="Total Transaction Quantity")
+```
+
+### Conclusion:
+
+-   From this analysis, we can say that all stores' sales are good where sales of store at Lower Manhattan is higher compared to other locations with 71742 sales
+
+# Product Category Analysis
+
+```{r fig.width=10, fig.height=6, fig.align='center'}
+sub2 <- data %>%
+  group_by(product_category) %>%
+  summarise(transaction_qty=sum(transaction_qty))
+ggplot(data=sub2,
+       mapping=aes(x=product_category,
+                   y=transaction_qty)) +
+  geom_col(fill="palevioletred") +
+  geom_text(aes(label=transaction_qty),vjust=-0.5, check_overlap = TRUE) +
+  labs(title = "Analysis based on Product Categories",
+       subtitle="This involves analyzing sales data based on product categories.",
+       x="Product Category",
+       y="Total Transaction quantity")
+```
+
+### Conclusion:
+
+-   There are highest sales for Coffee with total 89250 sales followed by Tea with 69737 sales
+
+# Product Type Analysis
+
+```{r fig.width=30, fig.height=6, fig.align='center'}
+sub3<- data %>%
+  group_by(product_type) %>%
+  summarize(transaction_qty=sum(transaction_qty))
+ggplot(sub3, 
+       mapping=aes(x=product_type,
+                   y=transaction_qty)) +
+  geom_col(fill="palevioletred") +
+  geom_text(aes(label=transaction_qty), vjust=-0.5, check_overlap = TRUE)+
+  labs(title = "Product Type Analysis",
+       subtitle = "This analyzes the sales data based on product types.",
+       x="Product Type",
+       y="Total Transaction Quantity")
+```
+
+### Conclusion:
+
+-   The highest selling product was Brewed Chai Tea with 26250 sales.
+-   The second highest selling product was Gourmet Brewed Coffee with 25973 sales.
+
+# Product Quantity Analysis
+
+```{r fig.align='center'}
+sub7<-data %>%
+  group_by(Size) %>%
+  summarise(transaction_qty=sum(transaction_qty))
+ggplot(sub7, mapping=aes(x=Size,
+                         y=transaction_qty)) +
+  geom_col(fill="palevioletred") +
+  geom_text(aes(label=transaction_qty), vjust=-0.5, check_overlap = TRUE)+
+  labs(title = "Product Quantity Analysis",
+       subtitle = "This analyzes the sales data based on order size.",
+       x="Size",
+       y="Total Transaction Quantity")
+  
+```
+
+### Conclusion
+
+-   There are highest sales for Regular size with total sales of 70186.
+-   The second highest sales are for Large size with total sales of 68540.
+-   NOTE: Not Defined refers to some products where the item size is fixed such as pastry, etc.
+
+# Profit Analysis - I
+
+```{r fig.width=32, fig.height=6, fig.align='center'}
+sub8 <- data %>%
+  group_by(product_type) %>%
+  summarize(Total_Bill=sum(Total_Bill))
+ggplot(sub8, mapping=aes(x=product_type,
+                         y=Total_Bill)) +
+  geom_col(fill="palevioletred") +
+  geom_text(aes(label=Total_Bill),vjust=-0.5, check_overlap = TRUE) +
+  labs(title="Profit Analysis - I",
+       subtitle = "This analyzes the profit gained on each product type.",
+       x="Product Type",
+       y="Profit gained")
+```
+
+### Conclusion
+
+-   There is highest profit gained for Barista Espresso with total sum of 91406.2 .
+-   The second highest profit was gained with Brewed Black Tea with total sum of 77081.95 .
+-   The least profit was gained by Green Beans with total sum of 1340 .
+
+# Profit Analysis - II
+
+```{r fig.width=14, fig.align='center'}
+sub9<-data %>%
+  group_by(product_category)%>%
+  summarise(Total_Bill=sum(Total_Bill))
+ggplot(sub9, mapping = aes(x=product_category,
+                           y=Total_Bill)) +
+  geom_col(fill="palevioletred") +
+  geom_text(aes(label=Total_Bill), vjust=-0.5,check_overlap = TRUE) +
+  labs(title = "Profit Analysis - II",
+       subtitle = "This analyzes the profit gained on each product category",
+       x="Product Category",
+       y="Profit gained")
+```
+
+### Conclusion
+-   The highest profit was earned on Coffee category of total sum 269952.45 .
+-   The second highest profit was earned on Tea category of total sum 196405.95 .
+-   The least profit was earned on Packaged Chocolate category of total sum 4407.64 .
+
+# Temporal Analysis - I
+
+```{r fig.width=14, fig.align='center'}
+month.order <- c("January", "February", "March", "April", "May", "June", 
+                 "July", "August", "September", "October", "November", "December")
+sub4<-data %>%
+  group_by(Month.Name) %>%
+  summarize(transaction_qty=sum(transaction_qty))
+
+sub4$Month.Name <- factor(sub4$Month.Name, levels = month.order)
+
+ggplot(sub4, mapping = aes(x=Month.Name, y=transaction_qty)) +
+  geom_line(size=1, group=1, color="palevioletred") + 
+  geom_text(aes(label=transaction_qty), vjust=-0.5, check_overlap = TRUE) +
+  labs(title="Temporal Analysis - I", subtitle = "This analyzes the pattern of sales of products over the months",
+       x="Month", y="Total Transaction Quantity")
+
+```
+
+### Conclusion:
+
+-   The overall sales are higher in the month of June with 50942 sales followed by the month of May with 48233 sales
+-   The data contains sales of six months of the year 2023
+-   The least sales were happened in the month of February with 23556 sales followed by the month of January with 24870 sales
+
+# Temporal Analysis - II
+
+```{r fig.width=14, fig.align='center'}
+day.order<-c("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday")
+sub5<- data %>%
+  group_by(Day.Name) %>%
+  summarise(transaction_qty=sum(transaction_qty))
+sub5$Day.Name <- factor(sub5$Day.Name, levels=day.order)
+ggplot(sub5, mapping=aes(x=Day.Name,
+                         y=transaction_qty)) +
+  geom_line(size=1,group=1,color="palevioletred") +
+  geom_text(aes(label=transaction_qty), vjust=-0.5, check_overlap = TRUE) +
+  labs(title="Temporal Analysis - II", subtitle = "This analyzes the pattern of day wise sales of products",
+       x="Day", y="Total Transaction Quantity")
+  
+```
+
+### Conclusion:
+
+-   The sales on Monday and Friday are comparitively high with 31231 and 31207 sales respectively.
+-   There is huge dip in sales on Saturday from Friday with 29614 and the sales on Saturday were very less than all other days.
+-   There are average sales on Tuesday and Wednesday with 30449 and 30625 sales respectively.
+
+# Temporal Analysis - III
+
+```{r fig.width=14, fig.align='center'}
+hour.order<-c(0:23)
+sub6<-data%>%
+  group_by(Hour) %>%
+  summarise(transaction_qty=sum(transaction_qty))
+sub6$Hour<-factor(sub6$Hour, levels=hour.order)
+ggplot(sub6, mapping=aes(x=Hour,
+                         y=transaction_qty)) +
+  geom_line(size=1, group=1, color="palevioletred") +
+  geom_text(aes(label=transaction_qty), vjust=0.5, check_overlap = TRUE) +
+  labs(title="Temporal Analysis - III",subtitle = "This analyzes the trend of sales of products on a hourly basis", x="Hour",y="Total Transaction Quantity")
+```
+
+### Conclusion
+
+-   Sales were recorded only between 6th and 20th hour.
+-   Sales were highest on 10th hour with a total of 26713 sales followed by 9th and 8th hour with 25370 and 25197 sales respectively.
+-   Least sales were happened on 20th hour with a total of 880 sales followed by the 6th hour with 6865 sales.
