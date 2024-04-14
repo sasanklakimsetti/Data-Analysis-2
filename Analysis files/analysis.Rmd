@@ -1,5 +1,5 @@
 ---
-title: "Coffee Store Chain Analysis"
+title: "Unveiling Coffee Sales Dynamics: Analyzing Store Performance, Product Categories, and Temporal Trends"
 author: "Sasank Lakimsetti"
 output: flexdashboard::flex_dashboard
 date: "07 April, 2024"
@@ -36,7 +36,7 @@ pacman::p_load(tidyverse,
 # Datset
 
 ```{r}
-data<-read.csv("C://lpu//4th sem//INT232 - R Programming//Project//Project testing//dataset.csv")
+data<-read.csv("C://lpu//4th sem//INT232 - R Programming//Project//Project Files//dataset.csv")
 reactable::reactable(data)
 ```
 
