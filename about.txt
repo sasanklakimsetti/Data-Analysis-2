@@ -1,0 +1,11 @@
+This analysis has been performed using R Markdown.
+
+This analysis contains 
+. Flex dashboard
+. Plots which depicts the analysis.
+. Every analysis plot contains a conclusion.
+
+
+The Markdown file contains Rmd script along with R code chunks.
+
+There is an use of javascript in the Rmd script. It was used so that there will be no issue in the viewing of the html document in the browser.
